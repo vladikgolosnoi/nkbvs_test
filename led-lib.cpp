@@ -19,22 +19,26 @@ void LedIntr::sendBit(uint8_t bit) {
 }
 
 void LedIntr::send(const String& text) {
+    const int bitDuration = 1000; // мс на один бит (подберите под ваш фоторезистор)
+
     for (size_t i = 0; i < text.length(); i++) {
         uint8_t byteVal = (uint8_t)text[i];
 
         // стартовый бит (0)
         sendBit(0);
-        
-        // отправляем все 8 бит данных
-        for (int bit = 0; bit < 8; bit++) {
+        delay(bitDuration);
+
+        // MSB - от старшего к младшим битам
+        for (int bit = 7; bit >= 0; bit--) {
             sendBit((byteVal >> bit) & 1);
+            delay(bitDuration);
         }
         
         // стоповый бит (1)
         sendBit(1);
+        delay(bitDuration * 2);  // чуть длиннее для надёжности
     }
 
-    delay(3000);
     sendBit(0);
 }
 
