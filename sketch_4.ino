@@ -4,7 +4,7 @@
 
 ArduinoAdapter adapter;
 // txPin = 13, без rx
-LedIntr dev(&adapter, 13, -1, 500);
+LedIntr dev(&adapter, 13, -1, 100);
 
 void setup() {
   pinMode(13, OUTPUT);
@@ -12,6 +12,13 @@ void setup() {
 }
 
 void loop() {
-  dev.send("HELLO\n");
-  Serial.println("Sent: HELLO");
+  if (Serial.available() > 0) {
+    String input = Serial.readStringUntil('\n');
+    Serial.print("Получено: ");
+    Serial.println(input);
+
+    dev.send(input);
+    Serial.print("Sent: ");
+    Serial.println(input);
+  }
 }

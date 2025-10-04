@@ -10,7 +10,7 @@ public:
     virtual bool pinRead(int pin) = 0;
     virtual void delay(unsigned long ms) = 0;
     virtual void delayMicro(unsigned long us) = 0;
-    virtual ~IGpioAdapter() {} // Добавляем виртуальный деструктор
+    virtual ~IGpioAdapter() {}
 };
 
 // Кодировщик / декодировщик

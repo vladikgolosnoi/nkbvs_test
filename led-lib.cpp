@@ -33,6 +33,9 @@ void LedIntr::send(const String& text) {
         // стоповый бит (1)
         sendBit(1);
     }
+
+    delay(3000);
+    sendBit(0);
 }
 
 uint8_t LedIntr::receiveBit() {
@@ -51,7 +54,7 @@ void LedIntr::receiveLoop() {
     while (true) {
         // ждем стартовый бит (0)
         while (receiveBit() != 0) {
-            // ожидание...
+            // ожидание
         }
         
         uint8_t byteVal = 0;
@@ -65,7 +68,7 @@ void LedIntr::receiveLoop() {
         // проверяем стоповый бит (должен быть 1)
         if (receiveBit() == 1) {
             char c = (char)byteVal;
-            Serial.print(c);  // сразу выводим в Serial
+            Serial.print(c);
         }
     }
 }
