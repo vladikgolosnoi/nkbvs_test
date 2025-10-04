@@ -19,6 +19,7 @@ public:
     LedIntr(IGpioAdapter* adapter, int txPin = -1, int rxPin = -1, unsigned long bitDurationUs = 1000);
 
     void send(const String& text);
+    void sendByte(uint8_t value);
 
     void setBitDuration(unsigned long bitDurationUs);
     unsigned long bitDuration() const { return _bitDurationUs; }
@@ -43,6 +44,10 @@ private:
     int _rxPin;
     unsigned long _bitDurationUs;
     uint16_t _threshold;
+    size_t _samplesPerBit;
+    unsigned long _halfBitUs;
+
+    static constexpr uint16_t analogHighLevel();
 
     void sendBit(uint8_t bit);
     uint16_t sampleAnalog();
@@ -53,4 +58,3 @@ private:
 };
 
 #endif
-

@@ -8,7 +8,6 @@ GenericAdapter adapter;
 constexpr int TX_PIN = 10;
 constexpr int RX_PIN = -1;
 constexpr unsigned long BIT_US = 20000; // длительность бита в микросекундах
-int rec;
 
 LedIntr dev(&adapter, TX_PIN, RX_PIN, BIT_US);
 
@@ -19,14 +18,19 @@ void setup() {
 void loop() {
   if (Serial.available() > 0) {
     String input = Serial.readStringUntil('\n');
-    Serial.print("Получено: ");
+    if (input.length() == 0) {
+      return;
+    }
+
+    Serial.print(F("Получено: "));
     Serial.println(input);
 
-    dev.send(input);
-    Serial.print("Sent: ");
+    String payload = input;
+    payload += '\n';
+    dev.send(payload);
+    Serial.print(F("Sent: "));
     Serial.println(input);
   }
 }
 
 #endif
-
