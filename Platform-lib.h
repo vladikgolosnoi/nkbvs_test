@@ -1,10 +1,11 @@
-#ifndef ARDUINO_LIB_H
-#define ARDUINO_LIB_H
+#ifndef PLATFORM_LIB_H
+#define PLATFORM_LIB_H
 
 #include <Arduino.h>
 #include "led-lib.h"
 
-class ArduinoAdapter : public IGpioAdapter {
+// supports both ESP (via Arduino core only!) and Arduino
+class GenericAdapter : public IGpioAdapter {
 public:
     void pinWrite(int pin, bool value) override {
         digitalWrite(pin, value ? HIGH : LOW);

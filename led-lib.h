@@ -27,7 +27,6 @@ public:
     uint16_t threshold() const { return _threshold; }
 
     void setSamplesPerBit(size_t samples);
-    size_t samplesPerBit() const { return _samplesPerBit; }
 
     void autoCalibrate(size_t sampleCount = 250, unsigned long sampleDelayUs = 500);
 
@@ -35,15 +34,15 @@ public:
 
     void receiveLoop(Stream& output = Serial);
 
+    uint8_t receiveBit();
+    int receiveInt();
+
 private:
     IGpioAdapter* _adapter;
     int _txPin;
     int _rxPin;
     unsigned long _bitDurationUs;
     uint16_t _threshold;
-    size_t _samplesPerBit;
-    unsigned long _sampleSpacingUs;
-    unsigned long _pollDelayUs;
 
     void sendBit(uint8_t bit);
     uint16_t sampleAnalog();
