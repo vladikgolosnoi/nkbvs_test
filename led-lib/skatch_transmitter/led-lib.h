@@ -16,41 +16,38 @@ public:
 // Кодировщик / декодировщик
 class LedIntr {
 public:
-    LedIntr(IGpioAdapter* adapter, int txPin = -1, int rxPin = -1, unsigned long bitDurationUs = 1000);
+    LedIntr(IGpioAdapter* adapter, int txPin = -1, int rxPin = -1, int bitDuration = 500);
 
-    void send(const String& text);
+    void sendBit(uint8_t bit);
+    void sendBitNonBlocking(uint8_t bit);
+    void sendPacket(const uint8_t* data, int length);
+    void sendGreetMes();
 
-    void setBitDuration(unsigned long bitDurationUs);
-    unsigned long bitDuration() const { return _bitDurationUs; }
+    int receiveInt();
+    uint8_t receiveBit();
+    uint8_t receiveBitNonBlocking();
+    bool receivePacket(uint8_t* buffer, int maxLength);
+    bool findGreetMes(unsigned long timeoutMs = 5000);
+
+    bool checkThreeOnes();
+    void setBitDuration(unsigned long bitDuration);
+    unsigned long bitDuration() const { return _bitDuration; }
 
     void setThreshold(uint16_t threshold);
     uint16_t threshold() const { return _threshold; }
 
-    void setSamplesPerBit(size_t samples);
-
-    void autoCalibrate(size_t sampleCount = 250, unsigned long sampleDelayUs = 500);
-
     bool receiveMessage(String& out, size_t maxChars = 64, unsigned long startTimeoutMs = 5000);
-
     void receiveLoop(Stream& output = Serial);
-
-    uint8_t receiveBit();
-    int receiveInt();
 
 private:
     IGpioAdapter* _adapter;
     int _txPin;
     int _rxPin;
-    unsigned long _bitDurationUs;
+    int _bitDuration;
+
     uint16_t _threshold;
 
-    void sendBit(uint8_t bit);
-    uint16_t sampleAnalog();
-    void waitInterval(unsigned long durationUs);
-    void updateTiming();
-    bool waitForStartBit(unsigned long timeoutMs);
     bool receiveByte(uint8_t& byteOut, unsigned long startTimeoutMs);
 };
 
 #endif
-

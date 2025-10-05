@@ -2,31 +2,40 @@
 #include "Platform-lib.h"
 #include "led-lib.h"
 
+// Настройки
+#define TX_PIN 10
+#define RX_PIN -1
+#define BIT_DURATION 500  // миллисекунды
+
 GenericAdapter adapter;
 
-#ifdef ARDUINO_ARCH_AVR
-constexpr int TX_PIN = 10;
-constexpr int RX_PIN = -1;
-constexpr unsigned long BIT_US = 20000; // длительность бита в микросекундах
-int rec;
+LedIntr dev(&adapter, TX_PIN, RX_PIN, BIT_DURATION);
 
-LedIntr dev(&adapter, TX_PIN, RX_PIN, BIT_US);
+uint8_t message[] = { 0b10101010, 0b11001100 }; // пример пакета
 
 void setup() {
-  Serial.begin(115200);
+    Serial.begin(115200);
+    delay(1000);
+    Serial.println("Transmitter started");
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-    String input = Serial.readStringUntil('\n');
-    Serial.print("Получено: ");
-    Serial.println(input);
+    if (Serial.available() > 0) {
+      String input = Serial.readStringUntil('\n');
+      if (input.length() == 0) {
+        return;
+      }
 
-    dev.send(input);
-    Serial.print("Sent: ");
-    Serial.println(input);
-  }
+      Serial.print(F("Получено: "));
+      Serial.println(input);
+
+      String payload = input;
+
+      dev.sendPacket(message, sizeof(message));
+      Serial.print(F("Отправлено: "));
+      Serial.println(input);
+    }
+    // Serial.println("Sending packet...");
+    
+    // delay(2000); // пауза между отправками
 }
-
-#endif
-
